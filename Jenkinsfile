@@ -46,9 +46,10 @@ pipeline {
             }
         }
         stage('DeployToProduction') {
-            when {
+            when { anyof {
                 branch 'master'
                 expression { params.REQUESTED_ACTION == 'production' }
+                   }
             }
             steps {
                 input 'Does the staging environment look OK?'
