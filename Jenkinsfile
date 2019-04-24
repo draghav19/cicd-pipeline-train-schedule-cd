@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    parameters {
+        choice(
+            choices: ['staging' , 'production'],
+            description: 'Please select which enviornment you want to . deploy',
+            name: 'REQUESTED_ACTION')
+    }
     stages {
         stage('Build') {
             steps {
@@ -11,6 +17,7 @@ pipeline {
         stage('DeployToStaging') {
             when {
                 branch 'master'
+                expression { params.REQUESTED_ACTION == 'staging' }
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'deploy', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
@@ -41,6 +48,7 @@ pipeline {
         stage('DeployToProduction') {
             when {
                 branch 'master'
+                expression { params.REQUESTED_ACTION == 'production' }
             }
             steps {
                 input 'Does the staging environment look OK?'
