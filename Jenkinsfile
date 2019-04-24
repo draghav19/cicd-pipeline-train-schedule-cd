@@ -46,7 +46,7 @@ pipeline {
             }
         }
         stage('DeployToProduction') {
-            when { anyof {
+            when { anyOf {
                 branch 'master'
                 expression { params.REQUESTED_ACTION == 'production' }
                    }
